@@ -45,4 +45,32 @@ python setup.py testr --slowest
         },
     }]
 
-    return [job1]
+    job2 = BaseJob({
+        "name": "jenkins-manager__lint",
+        "display-name": "jenkins-manager Lint Job",
+    })
+    job2.builders = [
+        {"shell": """#!/usr/bin/env bash
+set -e
+set -x
+
+echo "Setting up and activating virtualenv"
+virtualenv .virtualenv && source .virtualenv/bin/activate
+
+echo "Installing Python testing requirements"
+pip install -r requirements-test.txt
+
+python setup.py testr --slowest
+        """},
+    ]
+    job2["scm"] = [{
+        "git": {
+            "url": "https://github.com/waynr/jenkins-manager",
+            "skip-tag": True,
+            "branches": [
+                "master",
+            ],
+        },
+    }]
+
+    return [job1, job2]
