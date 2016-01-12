@@ -1,4 +1,5 @@
 import jenkins_manager.types.job as job
+import jenkins_manager.types.pipeline as pipeline
 
 
 class BaseJob(job.TemplateJob):
@@ -63,4 +64,6 @@ python setup.py testr --slowest
         """},
     ]
 
-    return [job1, job2]
+    pipe1 = pipeline.TriggerParameterizedBuildPipeline([job1, job2])
+    pipe1.render()
+    return pipe1
