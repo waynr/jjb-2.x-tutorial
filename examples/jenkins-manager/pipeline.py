@@ -35,5 +35,14 @@ echo "Actually run the tests..."
 python setup.py testr --slowest
         """},
     ]
+    job1["scm"] = [{
+        "git": {
+            "url": "https://github.com/waynr/jenkins-manager",
+            "skip-tag": True,
+            "branches": [
+                "master",
+            ],
+        },
+    }]
 
     return [job1]
