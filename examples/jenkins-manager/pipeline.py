@@ -11,6 +11,7 @@ def get_jobs():
 
     job1 = BaseJob({
         "name": "jenkins-manager",
+        "display-name": "jenkins-manager Noop Job",
     })
 
     return [job1]
