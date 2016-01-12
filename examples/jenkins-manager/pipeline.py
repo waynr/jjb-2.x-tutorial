@@ -65,7 +65,7 @@ python setup.py testr --slowest
         """},
         ]
 
-        for j in test, lint:
+        for j in lint, test:
             self.append(j)
 
         self.render()
