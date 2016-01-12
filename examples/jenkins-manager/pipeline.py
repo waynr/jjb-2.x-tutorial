@@ -55,11 +55,11 @@ echo
             }}]
 
 
-class JenkinsManagerPipeline(pipeline.TriggerParameterizedBuildPipeline):
-
+class PythonUnitTestJob(PythonJob):
     def __init__(self, *args, **kwargs):
-        test = PythonJob(type='unit',
-                         command="""
+        super(PythonUnitTestJob, self).__init__(type="unit", *args, **kwargs)
+
+        self["command"] = """
 echo "Installing Python testing requirements"
 pip install -r requirements-test.txt
 
@@ -72,7 +72,18 @@ pip install -e ./
 
 echo "Actually run the tests..."
 python setup.py testr --slowest
-        """)
+        """
+
+
+class JenkinsManagerPipeline(pipeline.TriggerParameterizedBuildPipeline):
+
+    def __init__(self, python_version_list=None, *args, **kwargs):
+        if python_version_list is None:
+            python_version_list = ["2.7"]
+
+        jobs = []
+        for version in python_version_list:
+            jobs.append(PythonUnitTestJob(python_version=version))
 
         lint = PythonJob(type='lint',
                          command="""
@@ -82,7 +93,9 @@ pip install -r requirements-test.txt
 python setup.py testr --slowest
         """)
 
-        for j in lint, test:
+        jobs.insert(0, lint)
+
+        for j in jobs:
             self.append(j)
 
         self.render()
