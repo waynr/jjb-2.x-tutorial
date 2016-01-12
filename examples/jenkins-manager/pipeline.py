@@ -22,11 +22,12 @@ class BaseJob(job.TemplateJob):
         self.update(kwargs)
 
 
-def get_jobs():
+class JenkinsManagerPipeline(pipeline.TriggerParameterizedBuildPipeline):
 
-    job1 = BaseJob(type='unit')
-    job1.builders = [
-        {"shell": """#!/usr/bin/env bash
+    def __init__(self, *args, **kwargs):
+        test = BaseJob(type='unit')
+        test.builders = [
+            {"shell": """#!/usr/bin/env bash
 set -e
 set -x
 
@@ -46,11 +47,11 @@ pip install -e ./
 echo "Actually run the tests..."
 python setup.py testr --slowest
         """},
-    ]
+        ]
 
-    job2 = BaseJob(type='lint')
-    job2.builders = [
-        {"shell": """#!/usr/bin/env bash
+        lint = BaseJob(type='lint')
+        lint.builders = [
+            {"shell": """#!/usr/bin/env bash
 set -e
 set -x
 
@@ -62,8 +63,16 @@ pip install -r requirements-test.txt
 
 python setup.py testr --slowest
         """},
-    ]
+        ]
 
-    pipe1 = pipeline.TriggerParameterizedBuildPipeline([job1, job2])
-    pipe1.render()
+        for j in test, lint:
+            self.append(j)
+
+        self.render()
+
+
+def get_jobs():
+
+    pipe1 = JenkinsManagerPipeline()
+
     return pipe1
