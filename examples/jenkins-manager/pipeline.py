@@ -1,18 +1,29 @@
 import jenkins_manager.types.job as job
 
 
-class BaseJob(job.Job):
+class BaseJob(job.TemplateJob):
 
     def __init__(self, *args, **kwargs):
         super(BaseJob, self).__init__(*args, **kwargs)
+        self["name"] = "jenkins-manager__{{type}}"
+        self["display-name"] = "jenkins-manager {{type}}"
+
+        self["scm"] = [{
+            "git": {
+                "url": "https://github.com/waynr/jenkins-manager",
+                "skip-tag": True,
+                "branches": [
+                    "master",
+                ],
+            },
+        }]
+
+        self.update(kwargs)
 
 
 def get_jobs():
 
-    job1 = BaseJob({
-        "name": "jenkins-manager",
-        "display-name": "jenkins-manager Test Job",
-    })
+    job1 = BaseJob(type='unit')
     job1.builders = [
         {"shell": """#!/usr/bin/env bash
 set -e
@@ -35,20 +46,8 @@ echo "Actually run the tests..."
 python setup.py testr --slowest
         """},
     ]
-    job1["scm"] = [{
-        "git": {
-            "url": "https://github.com/waynr/jenkins-manager",
-            "skip-tag": True,
-            "branches": [
-                "master",
-            ],
-        },
-    }]
 
-    job2 = BaseJob({
-        "name": "jenkins-manager__lint",
-        "display-name": "jenkins-manager Lint Job",
-    })
+    job2 = BaseJob(type='lint')
     job2.builders = [
         {"shell": """#!/usr/bin/env bash
 set -e
@@ -63,14 +62,5 @@ pip install -r requirements-test.txt
 python setup.py testr --slowest
         """},
     ]
-    job2["scm"] = [{
-        "git": {
-            "url": "https://github.com/waynr/jenkins-manager",
-            "skip-tag": True,
-            "branches": [
-                "master",
-            ],
-        },
-    }]
 
     return [job1, job2]
