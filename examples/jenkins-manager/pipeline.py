@@ -6,8 +6,8 @@ class BaseJob(job.TemplateJob):
 
     def __init__(self, *args, **kwargs):
         super(BaseJob, self).__init__(*args, **kwargs)
-        self["name"] = "jenkins-manager__{{type}}"
-        self["display-name"] = "jenkins-manager {{type}}"
+        self["name"] = "jenkins-manager__{{language}}__{{type}}"
+        self["display-name"] = "jenkins-manager {{language}} {{type}}"
 
         self["scm"] = [{
             "git": {
@@ -22,18 +22,33 @@ class BaseJob(job.TemplateJob):
         self.update(kwargs)
 
 
+class PythonJob(BaseJob):
+
+    def __init__(self, *args, **kwargs):
+        super(PythonJob, self).__init__(language="python", *args, **kwargs)
+
+        self.builders = [
+            {"shining-panda": {
+                "build-environment": "virtualenv",
+                "python-version": "System-CPython-2.7",
+                "nature": "shell",
+                "command": """#!/usr/bin/env bash
+set -x
+set -e
+echo "==========================================="
+python --version
+echo "==========================================="
+echo
+{{command}}
+                """
+            }}]
+
+
 class JenkinsManagerPipeline(pipeline.TriggerParameterizedBuildPipeline):
 
     def __init__(self, *args, **kwargs):
-        test = BaseJob(type='unit')
-        test.builders = [
-            {"shell": """#!/usr/bin/env bash
-set -e
-set -x
-
-echo "Setting up and activating virtualenv"
-virtualenv .virtualenv && source .virtualenv/bin/activate
-
+        test = PythonJob(type='unit',
+                         command="""
 echo "Installing Python testing requirements"
 pip install -r requirements-test.txt
 
@@ -46,24 +61,15 @@ pip install -e ./
 
 echo "Actually run the tests..."
 python setup.py testr --slowest
-        """},
-        ]
+        """)
 
-        lint = BaseJob(type='lint')
-        lint.builders = [
-            {"shell": """#!/usr/bin/env bash
-set -e
-set -x
-
-echo "Setting up and activating virtualenv"
-virtualenv .virtualenv && source .virtualenv/bin/activate
-
+        lint = PythonJob(type='lint',
+                         command="""
 echo "Installing Python testing requirements"
 pip install -r requirements-test.txt
 
 python setup.py testr --slowest
-        """},
-        ]
+        """)
 
         for j in lint, test:
             self.append(j)
