@@ -6,8 +6,8 @@ class BaseJob(job.TemplateJob):
 
     def __init__(self, *args, **kwargs):
         super(BaseJob, self).__init__(*args, **kwargs)
-        self["name"] = "jenkins-manager__{{language}}__{{type}}"
-        self["display-name"] = "jenkins-manager {{language}} {{type}}"
+        self["name"] = "jenkins-manager__{{type}}"
+        self["display-name"] = "jenkins-manager {type}}"
 
         self["scm"] = [{
             "git": {
@@ -24,13 +24,24 @@ class BaseJob(job.TemplateJob):
 
 class PythonJob(BaseJob):
 
+    version_string_map = {
+        "2.7": "System-CPython-2.7",
+        "3.4": "System-CPython-3.4",
+    }
+
     def __init__(self, *args, **kwargs):
-        super(PythonJob, self).__init__(language="python", *args, **kwargs)
+        if "python_version" not in kwargs:
+            kwargs["python_version"] = "2.7"
+        python_version = kwargs["python_version"]
+        super(PythonJob, self).__init__(*args, **kwargs)
+
+        self["name"] = "jenkins-manager__python-{{python_version}}__{{type}}"
+        self["display-name"] = "jenkins-manager python{{python_version}} {{type}}"
 
         self.builders = [
             {"shining-panda": {
                 "build-environment": "virtualenv",
-                "python-version": "System-CPython-2.7",
+                "python-version": self.version_string_map[python_version],
                 "nature": "shell",
                 "command": """#!/usr/bin/env bash
 set -x
