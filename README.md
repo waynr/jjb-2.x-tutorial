@@ -26,9 +26,9 @@ This repo contains:
 
 Because both Jenkins Job Builder 2.x and Jenkins Manager are still under
 development, you will have to install both from their respective git
-repositories. As soon as 2.0.0 package has been released, the first version of
-jenkins-manager will be released and this tutorial repo will be updated to
-reflect a more sane installation method.
+repositories. As soon as a `jenkins-job-builder` 2.0.0 package has been
+released, the first version of jenkins-manager will be released and this
+tutorial repo will be updated to reflect a more sane installation method.
 
 ### Installing
 
@@ -45,7 +45,7 @@ eventually have proper Pypi packages to install.
 ```bash
 virtualenv .virtualenv && source .virtualenv/bin/activate
 ```
-For anyone unfamiliar with Python development, the step below will set up a
+For anyone unfamiliar with Python development, the steps above will set up a
 local virtual environment which can deleted and recreated at will.
 
 ```bash
