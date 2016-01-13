@@ -124,6 +124,6 @@ The values you can set in this configuration file are documented in the JJB
 * [JJB 2.0 API Spec](http://specs.openstack.org/openstack-infra/infra-specs/specs/jenkins-job-builder_2.0.0-api-changes.html#gerrit-topic)
 
 
-[rcsqe-2016-01-12](http://www.meetup.com/Rose-City-Software-Quality-Engineers/events/227299686/)
-[ls-rcsqe-2016-01-12](presentation/version-control-jenkins-jobs-with-jjb.fodp)
-[pdf-rcsqe-2016-01-12](http://waynr.github.io/jjb-2.x-tutorial/pdfs/version-control-jenkins-jobs-with-jjb.pdf)
+[rcsqe-2016-01-12]: http://www.meetup.com/Rose-City-Software-Quality-Engineers/events/227299686/
+[ls-rcsqe-2016-01-12]: presentation/version-control-jenkins-jobs-with-jjb.fodp
+[pdf-rcsqe-2016-01-12]: http://waynr.github.io/jjb-2.x-tutorial/pdfs/version-control-jenkins-jobs-with-jjb.pdf
