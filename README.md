@@ -20,7 +20,8 @@ This repo contains:
 * The [Libre Office slideshow][ls-rcsqe-2016-01-12] presented at the
 [2016-01-12 Rose City Software Quality Engineering][rcsqe-2016-01-12] meetup.
     * [PDF export of the slideshow][pdf-rcsqe-2016-01-12]
-* An example Jenkins job pipeline defined using Python code (see)
+* An example
+  [Jenkins job pipeline defined using Python code][example_jenkins-manager_pipeline].
 
 ## Set up
 
@@ -124,6 +125,7 @@ The values you can set in this configuration file are documented in the JJB
 * [JJB 2.0 API Spec](http://specs.openstack.org/openstack-infra/infra-specs/specs/jenkins-job-builder_2.0.0-api-changes.html#gerrit-topic)
 
 
+[example_jenkins-manager_pipeline]: examples/jenkins-manager/pipeline.py
 [rcsqe-2016-01-12]: http://www.meetup.com/Rose-City-Software-Quality-Engineers/events/227299686/
 [ls-rcsqe-2016-01-12]: presentation/version-control-jenkins-jobs-with-jjb.fodp
 [pdf-rcsqe-2016-01-12]: http://waynr.github.io/jjb-2.x-tutorial/pdfs/version-control-jenkins-jobs-with-jjb.pdf
