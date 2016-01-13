@@ -103,6 +103,10 @@ python setup.py testr --slowest
 
 def get_jobs():
 
-    pipe1 = JenkinsManagerPipeline()
+    pipe1 = JenkinsManagerPipeline(
+        python_version_list=[
+            "2.7", "3.4"
+        ]
+    )
 
     return pipe1
