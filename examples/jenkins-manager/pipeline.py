@@ -6,12 +6,12 @@ class BaseJob(job.TemplateJob):
 
     def __init__(self, *args, **kwargs):
         super(BaseJob, self).__init__(*args, **kwargs)
-        self["name"] = "jenkins-manager__{{type}}__{{git_branch}}"
-        self["display-name"] = "jenkins-manager {type}}__{{git_branch}}"
+        self["name"] = "{{project}}__{{type}}__{{git_branch}}"
+        self["display-name"] = "{{project}} {type}}__{{git_branch}}"
 
         self["scm"] = [{
             "git": {
-                "url": "https://github.com/waynr/jenkins-manager",
+                "url": "https://github.com/waynr/{{project}}",
                 "skip-tag": True,
                 "branches": [
                     "{{git_branch}}",
@@ -35,8 +35,8 @@ class PythonJob(BaseJob):
         python_version = kwargs["python_version"]
         super(PythonJob, self).__init__(*args, **kwargs)
 
-        self["name"] = "jenkins-manager__python-{{python_version}}__{{type}}__{{git_branch}}"
-        self["display-name"] = "jenkins-manager python{{python_version}} {{type}}__{{git_branch}}"
+        self["name"] = "{{project}}__python-{{python_version}}__{{type}}__{{git_branch}}"
+        self["display-name"] = "{{project}} python{{python_version}} {{type}}__{{git_branch}}"
 
         self.builders = [
             {"shining-panda": {
@@ -104,6 +104,7 @@ python setup.py testr --slowest
 def get_jobs():
 
     pipe1 = JenkinsManagerPipeline(
+        project="jenkins-manager",
         python_version_list=[
             "2.7", "3.4"
         ],
@@ -111,6 +112,15 @@ def get_jobs():
     )
 
     pipe2 = JenkinsManagerPipeline(
+        project="jenkins-manager",
+        python_version_list=[
+            "2.7", "3.4"
+        ],
+        git_branch="tutorial"
+    )
+
+    pipe3 = JenkinsManagerPipeline(
+        project="jenkins-manager-contrib",
         python_version_list=[
             "2.7", "3.4"
         ],
@@ -118,5 +128,6 @@ def get_jobs():
     )
 
     pipe1.extend(pipe2)
+    pipe1.extend(pipe3)
 
     return pipe1
